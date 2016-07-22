@@ -1,6 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -93,7 +96,9 @@ int main(int argc, char* argv[]) {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+    
+        shader.bind((GLfloat)glfwGetTime(), "iGlobalTime");
+        shader.bind(glm::vec3(w, h, w/h),   "iResolution");
         shader.use();
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
