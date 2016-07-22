@@ -54,10 +54,10 @@ int main(int argc, char* argv[]) {
     glfwSetKeyCallback(window, key_callback);
 
     GLfloat vertices[] = {
-         1.0f,  1.0f, 0.0f,
-         1.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f,
-        -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f,
+         1.0f, -1.0f,
+        -1.0f, -1.0f,
+        -1.0f,  1.0f,
     };
 
     GLuint indices[] = {
@@ -65,18 +65,15 @@ int main(int argc, char* argv[]) {
         1, 2, 3,
     };
 
-    // VAO
     GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    // VBO
     GLuint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // EBO
     GLuint ebo;
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -87,10 +84,9 @@ int main(int argc, char* argv[]) {
           .attachFromFile("shader.frag")
           .link();
 
-	// Position attribute
 	GLint pos_attrib = glGetAttribLocation(shader.get(), "position");
     glEnableVertexAttribArray(pos_attrib);
-    glVertexAttribPointer(pos_attrib, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GL_FLOAT), (GLvoid*)0);
+    glVertexAttribPointer(pos_attrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), (GLvoid*)0);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
