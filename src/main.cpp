@@ -101,6 +101,7 @@ int main(int argc, char* argv[]) {
     auto iGlobalTime = 0.0f;
     auto iResolution = glm::vec3(w, h, (GLfloat)w/h);
     auto iMouse      = glm::vec4(0.0f);
+    auto iFrame      = -1;
 
     auto xy = glm::vec2(0.0f);
     auto zw = glm::vec2(0.0f);
@@ -112,6 +113,8 @@ int main(int argc, char* argv[]) {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        iFrame++;
 
         iGlobalTime = glfwGetTime();
 
@@ -135,6 +138,7 @@ int main(int argc, char* argv[]) {
         shader.bind(iGlobalTime, "iGlobalTime");
         shader.bind(iResolution, "iResolution");
         shader.bind(iMouse,      "iMouse");
+        shader.bind(iFrame,      "iFrame");
         shader.use();
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
