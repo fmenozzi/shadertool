@@ -29,8 +29,8 @@ static void cleanup(int status) {
 int main(int argc, char* argv[]) {
     argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
 
-    argparser_add(&ap, "-w", "--width",      ARGTYPE_INT,  &w, nullptr);
-    argparser_add(&ap, "-h", "--height",     ARGTYPE_INT,  &h, nullptr);
+    argparser_add(&ap, "-w", "--width",      ARGTYPE_INT,  &w,          nullptr);
+    argparser_add(&ap, "-h", "--height",     ARGTYPE_INT,  &h,          nullptr);
     argparser_add(&ap, "-f", "--fullscreen", ARGTYPE_BOOL, &fullscreen, nullptr);
 
     argparser_parse(&ap);
@@ -58,6 +58,8 @@ int main(int argc, char* argv[]) {
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     glfwSetKeyCallback(window, key_callback);
 
@@ -96,14 +98,35 @@ int main(int argc, char* argv[]) {
     glEnableVertexAttribArray(pos_attrib);
     glVertexAttribPointer(pos_attrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), (GLvoid*)0);
 
+    auto xy = glm::vec2(0.0f, 0.0f);
+    auto zw = glm::vec2(0.0f, 0.0f);
+
+    int last = GLFW_RELEASE;
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-    
+
+        double mx, my;
+        glfwGetCursorPos(window, &mx, &my);
+        my = h-my;
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            xy = glm::vec2(mx, my);
+            if (last == GLFW_RELEASE) {
+                zw = glm::vec2(mx, my);
+            }
+            last = GLFW_PRESS;
+        } else {
+            zw = glm::vec2(0.0f, 0.0f);
+            last = GLFW_RELEASE;
+        }
+
         shader.bind((GLfloat)glfwGetTime(), "iGlobalTime");
         shader.bind(glm::vec3(w, h, w/h),   "iResolution");
+        shader.bind(glm::vec4(xy, zw),      "iMouse");
         shader.use();
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);

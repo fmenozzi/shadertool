@@ -20,6 +20,7 @@ private:
 
     void bind(GLint location, GLfloat value);
     void bind(GLint location, GLint value);
+    void bind(GLint location, const glm::vec2& vec);
     void bind(GLint location, const glm::vec3& vec);
     void bind(GLint location, const glm::vec4& vec);
     void bind(GLint location, const glm::mat4& mat);
@@ -34,9 +35,7 @@ public:
     template<class T>
     Shader& bind(T&& value, const std::string& name) {
         int location = glGetUniformLocation(m_Program, name.c_str());
-        if (location == -1) {
-            fprintf(stderr, "Missing uniform %s\n", name.c_str());
-        } else {
+        if (location != -1) {
             bind(location, std::forward<T>(value));
         }
         return *this;
