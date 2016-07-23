@@ -94,14 +94,18 @@ int main(int argc, char* argv[]) {
           .attachFromFile("shader.frag")
           .link();
 
-	GLint pos_attrib = glGetAttribLocation(shader.get(), "position");
-    glEnableVertexAttribArray(pos_attrib);
-    glVertexAttribPointer(pos_attrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), (GLvoid*)0);
+	GLint posAttrib = glGetAttribLocation(shader.get(), "position");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GL_FLOAT), (GLvoid*)0);
 
-    auto xy = glm::vec2(0.0f, 0.0f);
-    auto zw = glm::vec2(0.0f, 0.0f);
+    auto iGlobalTime = 0.0f;
+    auto iResolution = glm::vec3(w, h, (GLfloat)w/h);
+    auto iMouse      = glm::vec4(0.0f);
 
-    int last = GLFW_RELEASE;
+    auto xy = glm::vec2(0.0f);
+    auto zw = glm::vec2(0.0f);
+
+    int lastMouse = GLFW_RELEASE;
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -109,24 +113,28 @@ int main(int argc, char* argv[]) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        iGlobalTime = glfwGetTime();
+
         double mx, my;
         glfwGetCursorPos(window, &mx, &my);
         my = h-my;
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             xy = glm::vec2(mx, my);
-            if (last == GLFW_RELEASE) {
+            if (lastMouse == GLFW_RELEASE) {
                 zw = glm::vec2(mx, my);
             }
-            last = GLFW_PRESS;
+            lastMouse = GLFW_PRESS;
         } else {
             zw = glm::vec2(0.0f, 0.0f);
-            last = GLFW_RELEASE;
+            lastMouse = GLFW_RELEASE;
         }
 
-        shader.bind((GLfloat)glfwGetTime(), "iGlobalTime");
-        shader.bind(glm::vec3(w, h, w/h),   "iResolution");
-        shader.bind(glm::vec4(xy, zw),      "iMouse");
+        iMouse = glm::vec4(xy, zw);
+
+        shader.bind(iGlobalTime, "iGlobalTime");
+        shader.bind(iResolution, "iResolution");
+        shader.bind(iMouse,      "iMouse");
         shader.use();
 
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
