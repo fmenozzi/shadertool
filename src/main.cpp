@@ -13,6 +13,8 @@
 GLint w = 800;
 GLint h = 600;
 
+bool fullscreen = false;
+
 static void key_callback(GLFWwindow* window, int key, int, int action, int) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -27,8 +29,9 @@ static void cleanup(int status) {
 int main(int argc, char* argv[]) {
     argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
 
-    argparser_add(&ap, "-w", "--width",  ARGTYPE_INT, &w, nullptr);
-    argparser_add(&ap, "-h", "--height", ARGTYPE_INT, &h, nullptr);
+    argparser_add(&ap, "-w", "--width",      ARGTYPE_INT,  &w, nullptr);
+    argparser_add(&ap, "-h", "--height",     ARGTYPE_INT,  &h, nullptr);
+    argparser_add(&ap, "-f", "--fullscreen", ARGTYPE_BOOL, &fullscreen, nullptr);
 
     argparser_parse(&ap);
 
@@ -40,7 +43,9 @@ int main(int argc, char* argv[]) {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    auto window = glfwCreateWindow(w, h, "Shadertool", nullptr, nullptr);
+    GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
+
+    auto window = glfwCreateWindow(w, h, "Shadertool", monitor, nullptr);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\n");
         cleanup(EXIT_FAILURE);
