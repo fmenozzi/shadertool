@@ -10,8 +10,8 @@
 #include <argparser.h>
 #include <Shader.hpp>
 
-GLint w = 800;
-GLint h = 600;
+GLint w = 600;
+GLint h = 400;
 
 bool fullscreen      = false;
 char shaderpath[256] = "default.frag";
@@ -20,6 +20,10 @@ static void key_callback(GLFWwindow* window, int key, int, int action, int) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+}
+
+static void window_size_callback(GLFWwindow*, int width, int height) {
+    glViewport(0, 0, width, height);
 }
 
 static void cleanup(int status) {
@@ -43,7 +47,7 @@ int main(int argc, char* argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     auto monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
 
@@ -57,13 +61,13 @@ int main(int argc, char* argv[]) {
 
     gladLoadGL();
 
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
+    glfwGetFramebufferSize(window, &w, &h);
+    glViewport(0, 0, w, h);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
 
     GLfloat vertices[] = {
          1.0f,  1.0f,
