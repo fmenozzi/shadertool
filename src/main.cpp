@@ -17,8 +17,23 @@ bool fullscreen      = false;
 char shaderpath[256] = "default.frag";
 
 static void key_callback(GLFWwindow* window, int key, int, int action, int) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GL_TRUE);
+    switch (key) {
+        case GLFW_KEY_ESCAPE:
+            if (action == GLFW_PRESS) {
+                glfwSetWindowShouldClose(window, GL_TRUE);
+            }
+            break;
+        case GLFW_KEY_F:
+        case GLFW_KEY_F11:
+            if (action == GLFW_PRESS) {
+                if (fullscreen) {
+                    glfwRestoreWindow(window);
+                } else {
+                    glfwMaximizeWindow(window);
+                }
+                fullscreen = !fullscreen;
+            }
+            break;
     }
 }
 
