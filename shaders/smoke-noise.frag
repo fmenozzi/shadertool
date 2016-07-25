@@ -15,15 +15,17 @@ const float noiseSwirlStepValue = noiseSwirlValue / float(noiseSwirlSteps);
 const float noiseScale = 2.;
 const float noiseTimeScale = 0.1;
 
+
 float simplex(vec3 v);
 float getNoise(vec3 v);
+
 
 void main()
 {
 	vec2 uv = fragCoord.xy / iResolution.xy;
 	float noise = getNoise(vec3(uv * noiseScale, iGlobalTime * noiseTimeScale));
     noise = noise * noise * noise * noise * 2.0;  //more contrast
-    fragColor = vec4(noise*0.3, noise*abs(sin(iGlobalTime)), noise*0.9, 1.0);
+    fragColor = vec4(noise, noise, noise, 1.0);
 }
 
 
@@ -156,4 +158,4 @@ float simplex(vec3 v)
   m = m * m;
   return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
                                 dot(p2,x2), dot(p3,x3) ) );
-  }
+}
