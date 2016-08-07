@@ -49,10 +49,10 @@ static void cleanup(int status) {
 int main(int argc, char* argv[]) {
     argparser ap = argparser_create(argc, argv, PARSEMODE_LENIENT);
 
-    argparser_add(&ap, "-w", "--width",      ARGTYPE_INT,    &w,          nullptr);
-    argparser_add(&ap, "-h", "--height",     ARGTYPE_INT,    &h,          nullptr);
-    argparser_add(&ap, "-f", "--fullscreen", ARGTYPE_BOOL,   &fullscreen, nullptr);
-    argparser_add(&ap, "-s", "--shader",     ARGTYPE_STRING, &shaderpath, nullptr);
+    argparser_add(&ap, "-W", "--width",      ARGTYPE_INT,    &w,          "Window width");
+    argparser_add(&ap, "-H", "--height",     ARGTYPE_INT,    &h,          "Window height");
+    argparser_add(&ap, "-f", "--fullscreen", ARGTYPE_BOOL,   &fullscreen, "Start window in fullscreen");
+    argparser_add(&ap, "-s", "--shader",     ARGTYPE_STRING, &shaderpath, "Path to fragment shader");
 
     argparser_parse(&ap);
 
