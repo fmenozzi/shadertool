@@ -21,9 +21,9 @@ include_directories(include/
                     deps/glfw/include/
                     deps/glm/
                     deps/stb/
-                    deps/argparser)
+                    deps/argparser/c/)
 
-file(GLOB DEPS deps/glad/src/glad.c deps/argparser/argparser.c)
+file(GLOB DEPS deps/glad/src/glad.c deps/argparser/c/argparser.c)
 file(GLOB SOURCES src/*.cpp
                   src/*.c)
 file(GLOB HEADERS include/*.hpp
